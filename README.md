@@ -2,7 +2,9 @@ PyIT - Python Image Tool
 ========================
 
 **Version:** 0.1
+
 **Status:** Development.
+
 **Author:** [Harrington Joseph](http://hjoseph.com)
 
 This is a simple library that helps you to manipulate images (crop, resize, convert - black and white / grayscale / svg). The basic idea behind this project it to provide a easy way to execute common operations over images that are required very often.
