@@ -1,6 +1,7 @@
 import math
 import Image
 
+
 def resize_and_crop(image, width, height):
     image_filename = image.filename
     actual_width, actual_height = image.size
@@ -12,7 +13,7 @@ def resize_and_crop(image, width, height):
     if width_ratio < height_ratio:
         new_width = width
         new_height = math.ceil(actual_height * new_width / actual_width)
-        crop_y =  int(math.fabs((new_height / 2) - (height / 2)))
+        crop_y = int(math.fabs((new_height / 2) - (height / 2)))
     else:
         new_height = height
         new_width = math.ceil(actual_width * new_height / actual_height)
@@ -26,14 +27,18 @@ def resize_and_crop(image, width, height):
     )
     return cropped_image
 
+
 def grayscale(image):
     return image.convert('L')
+
 
 def black_and_white(image):
     return image.convert('1')
 
 
-def _tiles_to_svg(image, x1, y1, x2, y2):
+def _get_svg_tiles_path(image, x1, y1, x2, y2, path_dict=None):
+    if not isinstance(path_dict, dict):
+        path_dict = {}
     color = None
     svg_code = ''
     approved = True
@@ -47,40 +52,61 @@ def _tiles_to_svg(image, x1, y1, x2, y2):
             if color != pixel:
                 approved = False
                 if width > height:
-                    svg_code = _tiles_to_svg(image, x1, y1, x1 + width / 2, y2)
-                    svg_code += _tiles_to_svg(image, x1 + width / 2, y1, x2, y2)
-                    pass
+                    _get_svg_tiles_path(
+                        image, x1, y1, x1 + width / 2, y2, path_dict)
+                    _get_svg_tiles_path(
+                        image, x1 + width / 2, y1, x2, y2, path_dict)
                 else:
-                    svg_code = _tiles_to_svg(image, x1, y1, x2, y1 + height / 2)
-                    svg_code += _tiles_to_svg(image, x1, y1 + height / 2, x2, y2)
+                    _get_svg_tiles_path(
+                        image, x1, y1, x2, y1 + height / 2, path_dict)
+                    _get_svg_tiles_path(
+                        image, x1, y1 + height / 2, x2, y2, path_dict)
                 break
         if not approved:
             break
     if approved:
-        color_format = 'rgba' if len(color) == 4 else 'rgb'
-        svg_code += '<rect x="%(x1)d" y="%(y1)d" '
-        svg_code +='width="%(width)d" height="%(height)d" style="fill:%(color_format)s%(color)s;"/>'
-        svg_code %= {
-            'x1': x1, 
+        if not color in path_dict:
+            path_dict[color] = ""
+        path_dict[color] += ' M%(x1)d %(y1)d H%(x2)d V%(y2)d H%(x1)d Z' % {
+            'x1': x1,
+            'x2': x2,
             'y1': y1,
-            'width': x2 - x1,
-            'height': y2 - y1, 
-            'color': str(color),
-            'color_format': color_format
+            'y2': y2
         }
-    return svg_code
+    return path_dict
+
+
+def _get_color(color_tuple):
+    """
+    Converts and returns the color in the following format:
+    In canse of a rgb tuple:
+        #%02x%02x%02x (i.e: #00FFCC)
+    In case of a rgba tuple:
+        rgba(color_tuple)
+    """
+    if len(color_tuple) == 3:
+        return '#%02x%02x%02x' % color_tuple
+    return 'rgba%s' % str(color_tuple)
+
 
 def svg_source(image):
-    data = image.getdata()
-    width, height = image.size
-    tiles_source = _tiles_to_svg(image, 0, 0, width, height)
     source = '''<?xml version="1.0" standalone="no"?>\
-    <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" \
-    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\
     <svg width="%(width)d" height="%(height)d"\
-         xmlns="http://www.w3.org/2000/svg" version="1.1">\
-      <desc>Example line01 - lines expressed in user coordinates</desc>\
-      %(tiles_source)s\
+    version="1.1" xmlns="http://www.w3.org/2000/svg">\
+      %(path_sources)s
     </svg>
-    ''' % {'width': width, 'height': height, 'tiles_source': tiles_source} 
-    return source
+    '''
+    path_sources = ''
+    width, height = image.size
+    path_dict = _get_svg_tiles_path(image, 0, 0, width, height)
+    for color, path in path_dict.iteritems():
+        path = path.strip()
+        path_sources += '<path d="%(path)s" fill="%(color)s"/>' % {
+            'color': _get_color(color),
+            'path': path,
+        }
+    return source % {
+        'width': width,
+        'height': height,
+        'path_sources': path_sources,
+    }
