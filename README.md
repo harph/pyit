@@ -1,7 +1,7 @@
 PyIT - Python Image Tool
 ========================
 
-**Version:** 0.1
+**Version:** 0.2
 
 **Status:** Development.
 
@@ -14,7 +14,7 @@ This is a simple library that helps you to manipulate images (crop, resize, conv
 + Python 2.7 (It possibly works in lower versions - Not tested)
 + PIL (Python Image Library).
 
-# How to use it.
+# How to use it
 
 It's very simple. Currently the library just has the following main functions:
 
@@ -23,7 +23,7 @@ It's very simple. Currently the library just has the following main functions:
 + *resize_and_crop*
 + *svg_source*
 
-So, how to use it? 
+So, how to use it?
 
 	import pyit
 	import Image # this is part of the PIL
@@ -58,6 +58,12 @@ So, how to use it?
 + Write a setup script.
 + Find a way to test/validate the SVG source.
 + Improve the *svg_source* algorithm to get a smaller SVG source.
++ Create an SVG class to perform different operations over the same object (cropping, resizing, convert to and Image object).
++ Create an Image class that inherits from the *PIL Image* class and add custom functions.
++ Consider adding new features or custom functions like:
+ 	+ Color replacement - tolerance range (replace similar/close colors).
+	+ Apply custom filter.
+	+ Transparencies.	
 
 # Support this project
 
