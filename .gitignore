@@ -1,5 +1,11 @@
 *.py[co]
 
+# Virtual Enviroment
+env
+
+# MacOS X stuff
+.DS_Store
+
 # Packages
 *.egg
 *.egg-info
