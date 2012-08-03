@@ -13,6 +13,7 @@ This is a simple library that helps you to manipulate images (crop, resize, conv
 
 + Python 2.7 (It possibly works in lower versions - Not tested)
 + PIL (Python Image Library).
++ nose (just for testing).
 
 # How to use it
 
