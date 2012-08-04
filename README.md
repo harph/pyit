@@ -17,6 +17,8 @@ This is a simple library that helps you to manipulate images (crop, resize, conv
 
 # How to use it
 
+**UPDATING**
+<!--
 It's very simple. Currently the library just has the following main functions:
 
 + *black_and_white*
@@ -52,7 +54,7 @@ So, how to use it?
 	svg_file = open('foo.svg', 'w')
 	svg_file.write(svg_source)
 	svg_file.close()
-
+-->
 # TODOs
 
 + Write documentation for each function.
