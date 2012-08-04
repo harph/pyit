@@ -1,5 +1,3 @@
-import sys
-import os
 import unittest
 from pyit import utils
 
@@ -34,6 +32,16 @@ class TestUtils(unittest.TestCase):
 
         # invalid hexadecimal color format
         self.assertRaises(ValueError, utils.get_color_tuple, '#$%^&*<')
+
+    def test_get_web_color(self):
+        # rgb tuple
+        self.assertEqual(utils.get_web_color((255, 255, 255)), '#ffffff')
+
+        # rbga tuple
+        self.assertEqual(utils.get_web_color((255, 255, 255, 0.5)), 'rgba(255, 255, 255, 0.5)')
+
+        # hexadecimal code
+        self.assertEqual(utils.get_web_color('#FFFFFF'), '#ffffff')
 
 
 if __name__ == '__main__':
