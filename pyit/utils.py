@@ -39,3 +39,17 @@ def get_color_tuple(color):
             return (int(red, 16), int(green, 16), int(blue, 16))
         except ValueError:
             raise ValueError('"%s" is not a valid hexadecimal color format.')
+
+
+def get_web_color(color):
+    """
+    Processes a color format and returns a `rgb` or `rgba` tuple.
+    :param color: Color in the following formats:
+        - rgb: rgb tuple, i.e.: (255, 255, 255)
+        - rgba: rgba tuple, i.e.: (255, 255, 255, 0.5)
+        - hex color: haxdeximal code format, i.e.: #00ffcc or #0fc
+    """
+    color_tuple = get_color_tuple(color)
+    if len(color_tuple) == 3:
+        return '#%02x%02x%02x' % color_tuple
+    return 'rgba%s' % str(color_tuple)
