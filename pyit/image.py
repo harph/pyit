@@ -1,7 +1,6 @@
 # -*- conding: utf-8 -*-
 import math
 import Image as _Image  # PIL
-import utils  # PyIt
 
 
 class ImageObject(object):
