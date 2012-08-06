@@ -38,7 +38,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(utils.get_web_color((255, 255, 255)), '#ffffff')
 
         # rbga tuple
-        self.assertEqual(utils.get_web_color((255, 255, 255, 0.5)), 'rgba(255, 255, 255, 0.5)')
+        self.assertEqual(
+            utils.get_web_color((255, 255, 255, 0.5)),
+            'rgba(255, 255, 255, 0.5)'
+        )
 
         # hexadecimal code
         self.assertEqual(utils.get_web_color('#FFFFFF'), '#ffffff')

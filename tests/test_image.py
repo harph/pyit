@@ -1,7 +1,7 @@
 import os
-import sys
 import unittest
 import Image  # PIL
+from tests import settings
 from pyit.image import ImageObject
 
 TEST_SIZES = (
@@ -19,22 +19,14 @@ TEST_SIZES = (
 
 class TestImageObject(unittest.TestCase):
 
-    fixture_folder_path = os.path.join(
-        os.path.dirname(__file__), 'fixtures')
-
     def _get_test_image_paths(self):
-        return ["%s/%s" % (self.fixture_folder_path, test_file)
-            for test_file in os.listdir(self.fixture_folder_path)]
-
-    def _get_default_image_path(self):
-        return '%s/dummy1.jpg' % self.fixture_folder_path
+        return ["%s/%s" % (settings.FIXTURE_FOLDER_PATH, test_file)
+            for test_file in os.listdir(settings.FIXTURE_FOLDER_PATH)]
 
     def _get_default_image_object(self):
         return ImageObject(Image.open(
-            self._get_default_image_path()))
-
-    def setup(self):
-        sys.path.append(os.path.dirname(__file__))
+            settings.DEFAULT_IMAGE_PATH
+        ))
 
     def test_getattr(self):
         # gettting a PIL Image instance attribute
@@ -46,11 +38,12 @@ class TestImageObject(unittest.TestCase):
 
     def test_open(self):
         self.assertIsInstance(ImageObject.open(
-            self._get_default_image_path()), ImageObject)
+            settings.DEFAULT_IMAGE_PATH), ImageObject)
 
     def test_get_pil_image_obj(self):
         image_object = self._get_default_image_object()
-        self.assertIsNotNone(image_object.get_pil_image_object())
+        pil_image_object = image_object.get_pil_image_object()
+        self.assertIsNotNone(pil_image_object)
 
     def test_resize_and_crop(self):
         for file_path in self._get_test_image_paths():
