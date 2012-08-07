@@ -75,9 +75,8 @@ def _get_biggest_color_distance():
 
 def get_color_similarity(color1, color2):
     """
-    Return a value from 0.0 to 1.0 that expresses how similar
-    is `color1` to `color2` based on the rgb dimentions distance
-    between them.
+    Return a value between 0.0 to 1.0 that expresses the similarity
+    between `color1` and `color2` based on the rgb dimention distance.
     :param color1: Color in the following formats:
         - rgb: rgb tuple, i.e.: (255, 255, 255)
         - rgba: rgba tuple, i.e.: (255, 255, 255, 0.5)
