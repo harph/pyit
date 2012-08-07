@@ -46,6 +46,19 @@ class TestUtils(unittest.TestCase):
         # hexadecimal code
         self.assertEqual(utils.get_web_color('#FFFFFF'), '#ffffff')
 
+    def test_get_color_similarity(self):
+        # Hexadecimal code
+        self.assertEqual(utils.get_color_similarity(
+            '#FFFFFF', '#FFFFFF'), 1)
+
+        # Alpha and rgb tuple
+        self.assertEqual(utils.get_color_similarity(
+            (0, 0, 0, 0), (0, 0, 0)), 1)
+
+        # Totally different colors
+        self.assertEqual(utils.get_color_similarity(
+            (0, 0, 0), '#FFFFFF'), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
