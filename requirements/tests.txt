@@ -1,0 +1,5 @@
+# Nosetests
+nose
+
+# Coverage
+coverage

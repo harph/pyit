@@ -46,6 +46,15 @@ class TestImageObject(unittest.TestCase):
         self.assertIsNotNone(pil_image_object)
 
     def test_resize_and_crop(self):
+        self.assertRaises(ValueError,
+            self._get_default_image_object().resize_and_crop,
+            -100, 300)
+        self.assertRaises(ValueError,
+            self._get_default_image_object().resize_and_crop,
+            100, -300)
+        self.assertRaises(ValueError,
+            self._get_default_image_object().resize_and_crop,
+            '100', 300)
         for file_path in self._get_test_image_paths():
             image_object = ImageObject(Image.open(file_path))
             for width, height in TEST_SIZES:
