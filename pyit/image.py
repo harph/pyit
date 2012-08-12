@@ -1,8 +1,9 @@
 # -*- conding: utf-8 -*-
 import math
 import Image as _Image  # PIL
+from pyit import utils
 
-
+# TODO do this 
 class ImageObject(object):
 
     # PIL Image wrapper
@@ -45,8 +46,10 @@ class ImageObject(object):
         :param width: Requested width.
         :param height: Requested height.
         """
+        for size in (width, height):
+            if not isinstance(size, int) or size <= 0:
+                raise ValueError('Width and height must be positive integers')
         actual_width, actual_height = map(float, self.size)
-        width, height = width, height
         new_width, new_height = 0, 0
         crop_x, crop_y = 0, 0
         width_ratio = actual_width / width
@@ -79,3 +82,32 @@ class ImageObject(object):
         Transforms all the pixels of the image into black or white.
         """
         self._image_wrapper = self.convert('1')
+
+    def replace_color(self, old_color, new_color, tolerance=0):
+        """
+        Replace all the ocurrences of the `old_color` by the new_one.
+        If the optional argument `tolerance` is given it will replace
+        colors where the similarity based on rgb dimension distance
+        matchs that value.
+        :param old_color: Color (rgb, rbga tuple or hex code) to be replaced.
+        :param new_color: Color (rgb, rbga tuple or hex code) that is going
+        to replace the old color.
+        :param tolerance: Optional value (between 0 and 1) that indicates
+        the the similarity between color that you want to replace. This can
+        be undertood as a percentage of similarity alowed between the
+        `old_color` and the rest in the image.
+        """
+        if tolerance < 0 or tolerance > 1:
+            raise ValueError(
+                'Invalid tolerance value. This value must be between 0 and 1.') 
+        similitude = 1 - tolerance
+        width, height = self.size
+        old_color_tuple = utils.get_color_tuple(old_color)
+        new_color_tuple = utils.get_color_tuple(new_color)
+        for x in range(0, width):
+            for y in range(0, height):
+                pixel = self.getpixel((x, y))
+                similarity = utils.get_color_similarity(
+                    old_color_tuple, pixel)
+                if similarity >= similitude:
+                    self.putpixel((x, y), new_color_tuple)

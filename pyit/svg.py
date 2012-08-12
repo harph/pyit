@@ -26,7 +26,13 @@ class SVGObject(object):
         """
         return SVGObject(_Image.open(image_path))
 
-    def _generate_SVG_source(self, x1=0, y1=0, x2=None, y2=None):
+    @property
+    def SVG_paths(self):
+        if not self._SVG_path_dict:
+            self._generate_SVG_paths()
+        return self._SVG_path_dict
+
+    def _generate_SVG_paths(self, x1=0, y1=0, x2=None, y2=None):
         # Generates SVG source by using tile paths.
         if not isinstance(self._SVG_path_dict, dict):
             self._SVG_path_dict = {}
@@ -47,11 +53,11 @@ class SVGObject(object):
                 if color != pixel:
                     approved_tile = False
                     if width > height:
-                        self._generate_SVG_source(x1, y1, x1 + width / 2, y2)
-                        self._generate_SVG_source(x1 + width / 2, y1, x2, y2)
+                        self._generate_SVG_paths(x1, y1, x1 + width / 2, y2)
+                        self._generate_SVG_paths(x1 + width / 2, y1, x2, y2)
                     else:
-                        self._generate_SVG_source(x1, y1, x2, y1 + height / 2)
-                        self._generate_SVG_source(x1, y1 + height / 2, x2, y2)
+                        self._generate_SVG_paths(x1, y1, x2, y1 + height / 2)
+                        self._generate_SVG_paths(x1, y1 + height / 2, x2, y2)
                     break
             if not approved_tile:
                 break
@@ -77,8 +83,9 @@ class SVGObject(object):
         '</svg>'
         path_sources = ''
         width, height = self._image_source.size
-        self._generate_SVG_source()
-        for color, path in self._SVG_path_dict.iteritems():
+        for color, path in self.SVG_paths.iteritems():
+            if not path:
+                continue
             path = path.strip()
             path_sources += '<path d="%(path)s" fill="%(color)s"/>' % {
                 'color': utils.get_web_color(color),
@@ -89,6 +96,39 @@ class SVGObject(object):
             'height': height,
             'path_sources': path_sources,
         }
+
+    def replace_color(self, old_color, new_color, tolerance=0):
+        """
+        Replace all the ocurrences of the `old_color` by the new_one.
+        If the optional argument `tolerance` is given it will replace
+        colors where the similarity based on rgb dimension distance
+        matchs that value.
+        :param old_color: Color (rgb, rbga tuple or hex code) to be replaced.
+        :param new_color: Color (rgb, rbga tuple or hex code) that is going
+        to replace the old color.
+        :param tolerance: Optional value (between 0 and 1) that indicates
+        the the similarity between color that you want to replace. This can
+        be undertood as a percentage of similarity alowed between the
+        `old_color` and the rest in the image.
+        """
+        if tolerance < 0 or tolerance > 1:
+            raise ValueError(
+                'Invalid tolerance value. This value must be between 0 and 1.')
+        new_color_path = ''
+        similitude = 1 - tolerance
+        old_color_tuple = utils.get_color_tuple(old_color)
+        new_color_tuple = utils.get_color_tuple(new_color)
+        for color in self.SVG_paths.keys():
+            similarity = utils.get_color_similarity(
+                old_color_tuple, color)
+            if similarity >= similitude:
+                new_color_path += self.SVG_paths[color]
+                del self.SVG_paths[color]
+
+        if new_color_path:
+            if new_color_tuple not in self.SVG_paths:
+                self.SVG_paths[new_color_tuple] = ''
+            self.SVG_paths[new_color_tuple] += new_color_path
 
     def save(self, file_path):
         """
