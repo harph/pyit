@@ -24,6 +24,16 @@ class TestSVGObject(unittest.TestCase):
         # This needs a better test.
         # Find a way to validate the SVG source.
 
+
+    def test_replace_color(self):
+        svg_object = self._get_default_svg_object()
+        old_color = (255, 255, 255)
+        new_color = (255, 0, 0)
+        svg_object.replace_color(old_color, new_color, tolerance=0.2)
+        colors = svg_object.SVG_paths.keys()
+        self.assertTrue(old_color not in colors)
+        self.assertTrue(new_color in colors)
+
     def test_save(self):
         svg_test_path = 'unittest_svg.svg'
         svg_object = self._get_default_svg_object()
