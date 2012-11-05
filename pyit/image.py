@@ -3,7 +3,7 @@ import math
 import Image as _Image  # PIL
 from pyit import utils
 
-# TODO do this 
+
 class ImageObject(object):
 
     # PIL Image wrapper
@@ -99,7 +99,7 @@ class ImageObject(object):
         """
         if tolerance < 0 or tolerance > 1:
             raise ValueError(
-                'Invalid tolerance value. This value must be between 0 and 1.') 
+                'Invalid tolerance value. This value must be between 0 and 1.')
         similitude = 1 - tolerance
         width, height = self.size
         old_color_tuple = utils.get_color_tuple(old_color)
