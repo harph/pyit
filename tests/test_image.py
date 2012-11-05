@@ -75,6 +75,35 @@ class TestImageObject(unittest.TestCase):
         for pixel in image_object.getdata():
             self.assertTrue(pixel == 0 or pixel == 255)
 
+    def test_replace_color(self):
+        default_image = self._get_default_image_object()
+        old_color = (255, 255, 255)
+        new_color = (255, 0, 0)
+        # Without tolerance
+        image_object_with_no_tol = self._get_default_image_object()
+        image_object_with_no_tol.replace_color(old_color, new_color)
+        # With tolerance
+        image_object_with_tol = self._get_default_image_object()
+        image_object_with_tol.replace_color(old_color, new_color, 1)
+        w, h = default_image.size
+        for y in range(0, h):
+            for x in range(0, w):
+                no_tol_pixel = image_object_with_no_tol.getpixel((x, y))
+                tol_pixel = image_object_with_tol.getpixel((x, y))
+                default_pixel = default_image.getpixel((x, y))
+                # Validating the the old color is not on the image anymore.
+                self.assertNotEqual(no_tol_pixel, old_color)
+                self.assertNotEqual(tol_pixel, old_color)
+                # Validating old color replacement by the new one
+                if default_pixel == old_color:
+                    self.assertEqual(no_tol_pixel, new_color)
+                # Because the tolerance of the second replacement is 1, all the
+                # colors should be 'new_color'. This validate the previous
+                # condition on the 'image_object_with_tol' and it also verifies
+                # the tolerance assuming that all the colors should be the
+                # same.
+                self.assertEqual(tol_pixel, new_color)
+
 
 if __name__ == '__main__':
     unittest.main()
