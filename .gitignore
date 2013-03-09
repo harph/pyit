@@ -3,6 +3,9 @@
 # Virtual Enviroment
 env
 
+# Docs
+docs/_build
+
 # MacOS X stuff
 .DS_Store
 

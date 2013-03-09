@@ -12,8 +12,8 @@ class SVGObject(object):
 
     def __init__(self, image_inst):
         """
-        Contructor
-        :param image_inst: PIL Image or pyit.image.ImageObject instance.
+        :param image_inst: image instance.
+        :type image_inst: Image or pyit.image.ImageObject
         """
         self._image_source = image_inst
 
@@ -22,7 +22,10 @@ class SVGObject(object):
         """
         Creates and returns a SVGObject instance based on
         an image file.
+
         :param image_path: path to the image file.
+        :type image_path: str.
+        :returns: SVGObject -- instance based on the image path.
         """
         return SVGObject(_Image.open(image_path))
 
@@ -74,7 +77,9 @@ class SVGObject(object):
 
     def get_SVG_source(self):
         """
-        Returns the svg source that represents the current image.
+        Returns the SVG source that represents the current image.
+        
+        :returns: str -- SVG source.
         """
         source = '<?xml version="1.0" standalone="no"?>'\
         '<svg width="%(width)d" height="%(height)d" '\
@@ -103,13 +108,17 @@ class SVGObject(object):
         If the optional argument `tolerance` is given it will replace
         colors where the similarity based on rgb dimension distance
         matchs that value.
+        
         :param old_color: Color (rgb, rbga tuple or hex code) to be replaced.
+        :type old_color: str or tuple.
         :param new_color: Color (rgb, rbga tuple or hex code) that is going
         to replace the old color.
+        :type new_color: str or tuple.
         :param tolerance: Optional value (between 0 and 1) that indicates
         the the similarity between color that you want to replace. This can
         be undertood as a percentage of similarity alowed between the
         `old_color` and the rest in the image.
+        :type tolerance: float.
         """
         if tolerance < 0 or tolerance > 1:
             raise ValueError(
@@ -134,7 +143,9 @@ class SVGObject(object):
         """
         Creates and writes a file with the result from the function
         `get_SVG_source`.
+        
         :param file_path: path to the file.
+        :type file_path: str.
         """
         if not file_path.endswith('.svg'):
             file_path += '.svg'
