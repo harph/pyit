@@ -78,7 +78,7 @@ class SVGObject(object):
     def get_SVG_source(self):
         """
         Returns the SVG source that represents the current image.
-        
+
         :returns: str -- SVG source.
         """
         source = '<?xml version="1.0" standalone="no"?>'\
@@ -108,7 +108,7 @@ class SVGObject(object):
         If the optional argument `tolerance` is given it will replace
         colors where the similarity based on rgb dimension distance
         matchs that value.
-        
+
         :param old_color: Color (rgb, rbga tuple or hex code) to be replaced.
         :type old_color: str or tuple.
         :param new_color: Color (rgb, rbga tuple or hex code) that is going
@@ -143,7 +143,7 @@ class SVGObject(object):
         """
         Creates and writes a file with the result from the function
         `get_SVG_source`.
-        
+
         :param file_path: path to the file.
         :type file_path: str.
         """

@@ -6,10 +6,13 @@
 Welcome to PyIT's documentation!
 ================================
 
-Contents:
+PyIT is a simple library that helps you to manipulate images and SVGs (crop, resize, replace colors, convert - black and white / grayscale). It provides classes and function to perform common operation on images.
 
-.. toctree::
-   :maxdepth: 5
+
+Host to use it
+================================
+
+
 
 Image
 ================================
@@ -17,23 +20,14 @@ Image
 .. autoclass:: pyit.image.ImageObject
     :members:
 
+
 SVG
 ================================
 
 .. autoclass:: pyit.svg.SVGObject
     :members:
 
-
-Automembers
-================================
-
-.. automodule:: pyit.image
-    :members:
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
 

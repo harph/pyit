@@ -14,8 +14,8 @@ class ImageObject(object):
 
     def __init__(self, image_inst):
         """
-        Constructor.
         :param image_inst: PIL Image class instance.
+        :type image_inst: Image.
         """
         self._image_wrapper = image_inst
 
@@ -27,15 +27,18 @@ class ImageObject(object):
     @classmethod
     def open(cls, image_path):
         """
-        Class Method.
         Creates and returns an ImageObject instance based on the image path.
+
         :param image_path: path to the image file.
+        :type image_path: str.
+        :returns: ImageObject -- instance based on the image path.
         """
         return cls(_Image.open(image_path))
 
     def get_pil_image_object(self):
         """
-        Returns the PIL Image instance that is being used at this instace.
+        :returns: Image -- PIL image instance that is being used at this
+        instace.
         """
         return self._image_wrapper
 
@@ -43,8 +46,11 @@ class ImageObject(object):
         """
         Resizes and crops (if it's necessary) the image source
         from the center.
+
         :param width: Requested width.
+        :type width: int.
         :param height: Requested height.
+        :type height: int.
         """
         for size in (width, height):
             if not isinstance(size, int) or size <= 0:
@@ -89,13 +95,17 @@ class ImageObject(object):
         If the optional argument `tolerance` is given it will replace
         colors where the similarity based on rgb dimension distance
         matchs that value.
+
         :param old_color: Color (rgb, rbga tuple or hex code) to be replaced.
+        :type old_color: str or tuple.
         :param new_color: Color (rgb, rbga tuple or hex code) that is going
         to replace the old color.
+        :type new_color: str or tuple.
         :param tolerance: Optional value (between 0 and 1) that indicates
         the the similarity between color that you want to replace. This can
         be undertood as a percentage of similarity alowed between the
         `old_color` and the rest in the image.
+        :type tolerance: float.
         """
         if tolerance < 0 or tolerance > 1:
             raise ValueError(
